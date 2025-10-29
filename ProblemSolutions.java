@@ -33,8 +33,23 @@ class ProblemSolutions {
     public boolean isSubset(int list1[], int list2[]) {
 
         // ADD YOU CODE HERE -- DON'T FORGET TO ADD YOR NAME AT TOP OF FILE
+        // Use a hashmap to count occurrences in list1 (handles duplicates).
+        // Then ensure every element of list2 exists with sufficient count.
+        if (list2 == null || list2.length == 0) { return true; }
+        if (list1 == null || list1.length == 0) { return false; }
 
-        return false;
+        Map<Integer, Integer> counts = new HashMap<>();
+        for (int v : list1) {
+            counts.put(v, counts.getOrDefault(v, 0) + 1);
+        }
+
+        for (int v : list2) {
+            int c = counts.getOrDefault(v, 0);
+            if (c == 0) return false; 
+            counts.put(v, c - 1);
+        }
+
+        return true;
     }
 
 
@@ -54,8 +69,14 @@ class ProblemSolutions {
     public int findKthLargest(int[] array, int k) {
 
         // ADD YOUR CODE HERE
-
-        return 0;
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        for (int num : array) {
+            minHeap.offer(num);
+            if (minHeap.size() > k) {
+                minHeap.poll();
+            }
+        }
+        return minHeap.peek();
     }
 
 
@@ -75,8 +96,19 @@ class ProblemSolutions {
     public int[] sort2Arrays(int[] array1, int[] array2) {
 
         // ADD YOU CODE HERE
-
-        return null;
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < array1.length; i++) {
+            list.add(array1[i]);
+        }
+        for (int j = 0; j < array2.length; j++) {
+            list.add(array2[j]);
+        }
+        Collections.sort(list);
+        int[] sortedArray = new int[list.size()];
+        for (int k = 0; k < list.size(); k++) {
+            sortedArray[k] = list.get(k);
+        }
+        return sortedArray;
     }
 
 }
