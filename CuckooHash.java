@@ -253,28 +253,30 @@ public class CuckooHash<K, V> {
 		K currKey = key;
 		V currValue = value;
 		// initial target is h1
-		int pos = hash1(currKey);
+		int x = hash1(currKey);
 		while (count < CAPACITY) {
-			if (table[pos] == null) {
-				table[pos] = new Bucket<K, V>(currKey, currValue);
+			if (table[x] == null) {
+				table[x] = new Bucket<K, V>(currKey, currValue);
 				return;
 			} else {
 				// if the exact <key,value> pair already exists, do nothing
-				if (table[pos].getBucKey().equals(currKey) && table[pos].getValue().equals(currValue)) {
+				if (table[x].getBucKey().equals(currKey) && table[x].getValue().equals(currValue)) {
 					return;
 				}
 				// kick out the resident entry and place the current one
-				K tempKey = table[pos].getBucKey();
-				V tempValue = table[pos].getValue();
-				table[pos] = new Bucket<K, V>(currKey, currValue);
-				// prepare to insert the displaced element at its alternate location
+				K tempKey = table[x].getBucKey();
+				V tempValue = table[x].getValue();
+				table[x] = new Bucket<K, V>(currKey, currValue);
+
+				// insert the displaced element at its alternate location
 				currKey = tempKey;
 				currValue = tempValue;
 				int h1 = hash1(currKey);
 				int h2 = hash2(currKey);
-				// the displaced element was just removed from 'pos'; its next
+				
+				// the displaced element was just removed from 'x'; its next
 				// attempt should be at the other hash position
-				pos = (pos == h1) ? h2 : h1;
+				x = (x == h1) ? h2 : h1;
 			}
 			count++;
 		}
